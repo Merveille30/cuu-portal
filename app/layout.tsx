@@ -6,8 +6,8 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'CUU Student Portal',
-  description: 'Clarke University Uganda — Student Records Management System',
-  icons: { icon: '/favicon.ico' },
+  description: 'Cavendish University Uganda — Student Records Management System',
+  icons: { icon: '/cuu-logo.svg' },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

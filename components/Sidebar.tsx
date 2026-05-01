@@ -3,8 +3,9 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import {
   LayoutDashboard, BookOpen, CreditCard, BarChart2,
-  FileText, User, GraduationCap, LogOut
+  FileText, User, LogOut
 } from 'lucide-react'
+import CUULogo from './CUULogo'
 
 const navItems = [
   { label: 'Dashboard',    href: '/dashboard',  icon: LayoutDashboard, section: 'Main' },
@@ -44,11 +45,8 @@ export default function Sidebar({ studentName, regNo }: SidebarProps) {
       style={{ background: 'linear-gradient(180deg,#0f172a 0%,#1e293b 100%)' }}>
 
       {/* Logo */}
-      <div className="px-5 py-6 border-b border-white/10 flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white text-xl flex-shrink-0"
-          style={{ background: 'linear-gradient(135deg,#1a56db,#6366f1)' }}>
-          <GraduationCap size={20} />
-        </div>
+      <div className="px-5 py-5 border-b border-white/10 flex items-center gap-3">
+        <CUULogo size={44} />
         <div>
           <p className="text-white font-bold text-sm leading-tight">CUU Portal</p>
           <p className="text-white/40 text-xs">Student Management</p>

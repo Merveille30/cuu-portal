@@ -2,7 +2,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { GraduationCap, User, Lock, BookOpen, BarChart2, CreditCard, FileText } from 'lucide-react'
+import Image from 'next/image'
+import { User, Lock, BookOpen, BarChart2, CreditCard, FileText } from 'lucide-react'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -41,9 +42,8 @@ export default function LoginPage() {
         <div className="absolute w-80 h-80 rounded-full bottom-[-60px] left-[-60px] opacity-15"
           style={{ background: 'radial-gradient(circle,#1a56db,transparent)' }} />
         <div className="relative z-10 text-center max-w-sm">
-          <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-7 shadow-2xl"
-            style={{ background: 'linear-gradient(135deg,#1a56db,#6366f1)' }}>
-            <GraduationCap size={38} className="text-white" />
+          <div className="w-24 h-24 rounded-full overflow-hidden mx-auto mb-7 shadow-2xl border-4 border-white/20">
+            <Image src="/cuu-logo.svg" alt="CUU Logo" width={96} height={96} className="w-full h-full object-cover" priority />
           </div>
           <h1 className="text-3xl font-extrabold text-white leading-tight mb-3">
             CUU Student<br />Management Portal
@@ -72,9 +72,8 @@ export default function LoginPage() {
       {/* Right panel */}
       <div className="w-full lg:w-[460px] bg-white flex flex-col justify-center px-10 py-12 overflow-y-auto">
         <div className="lg:hidden flex items-center gap-3 mb-8">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center"
-            style={{ background: 'linear-gradient(135deg,#1a56db,#6366f1)' }}>
-            <GraduationCap size={20} className="text-white" />
+          <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-gray-200">
+            <Image src="/cuu-logo.svg" alt="CUU Logo" width={40} height={40} className="w-full h-full object-cover" />
           </div>
           <span className="font-bold text-gray-900">CUU Portal</span>
         </div>

@@ -2,7 +2,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { GraduationCap, User, Hash, Mail, Phone, BookOpen, AtSign, Lock } from 'lucide-react'
+import Image from 'next/image'
+import { User, Hash, Mail, Phone, BookOpen, AtSign, Lock } from 'lucide-react'
 
 const PROGRAMMES = [
   'Bachelor of Computer Science',
@@ -76,8 +77,8 @@ export default function RegisterPage() {
         {/* Header */}
         <div className="px-10 py-8 text-center"
           style={{ background: 'linear-gradient(135deg,#0f172a,#1a56db)' }}>
-          <div className="w-14 h-14 rounded-2xl bg-white/15 flex items-center justify-center mx-auto mb-4">
-            <GraduationCap size={26} className="text-white" />
+          <div className="w-16 h-16 rounded-full overflow-hidden mx-auto mb-4 border-3 border-white/20 shadow-xl">
+            <Image src="/cuu-logo.svg" alt="CUU Logo" width={64} height={64} className="w-full h-full object-cover" priority />
           </div>
           <h2 className="text-xl font-extrabold text-white">Student Registration</h2>
           <p className="text-white/55 text-sm mt-1">Create your CUU student account</p>
