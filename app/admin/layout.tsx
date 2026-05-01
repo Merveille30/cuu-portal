@@ -2,6 +2,8 @@ import { redirect } from 'next/navigation'
 import { getAdminSession } from '@/lib/auth'
 import AdminSidebar from '@/components/AdminSidebar'
 
+// This layout wraps /admin/dashboard, /admin/students, etc.
+// The /admin/login page is in app/(admin-auth)/admin/login — outside this layout
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await getAdminSession()
   if (!session) redirect('/admin/login')
