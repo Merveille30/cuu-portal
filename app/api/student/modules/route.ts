@@ -8,26 +8,66 @@ export async function GET() {
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const { data: student } = await supabaseAdmin
-    .from('students').select('programme').eq('id', session.id).single()
+    .from('students')
+    .select('programme, reg_status')
+    .eq('id', session.id)
+    .single()
 
+  if (!student?.programme) {
+    return NextResponse.json({
+      modules: [],
+      registeredIds: [],
+      error: 'no_programme',
+      message: 'Please select your programme first before registering modules.',
+    })
+  }
+
+  // Find programme by exact name match
   const { data: prog } = await supabaseAdmin
-    .from('programmes').select('id').eq('name', student?.programme || '').single()
+    .from('programmes')
+    .select('id, name, code')
+    .eq('name', student.programme)
+    .maybeSingle()
 
-  if (!prog) return NextResponse.json([])
+  if (!prog) {
+    // Try partial match
+    const { data: progs } = await supabaseAdmin
+      .from('programmes')
+      .select('id, name, code')
+      .ilike('name', `%${student.programme.split(' ').slice(-2).join(' ')}%`)
+      .limit(1)
 
+    const matchedProg = progs?.[0]
+    if (!matchedProg) {
+      return NextResponse.json({
+        modules: [],
+        registeredIds: [],
+        error: 'no_modules',
+        message: `No modules found for "${student.programme}". Please run FINAL_SETUP.sql in Supabase.`,
+      })
+    }
+
+    return fetchModules(session.id, matchedProg.id)
+  }
+
+  return fetchModules(session.id, prog.id)
+}
+
+async function fetchModules(studentId: string, progId: string) {
   const { data: modules } = await supabaseAdmin
     .from('modules')
     .select('*')
-    .eq('programme_id', prog.id)
-    .order('year').order('semester').order('name')
+    .eq('programme_id', progId)
+    .order('year')
+    .order('semester')
+    .order('name')
 
-  // Get already registered modules
   const { data: registered } = await supabaseAdmin
     .from('student_modules')
     .select('module_id')
-    .eq('student_id', session.id)
+    .eq('student_id', studentId)
 
-  const registeredIds = new Set((registered || []).map(r => r.module_id))
+  const registeredIds = new Set((registered || []).map((r: { module_id: string }) => r.module_id))
 
   return NextResponse.json({
     modules: modules || [],
@@ -46,19 +86,23 @@ export async function POST(req: NextRequest) {
 
   const rows = module_ids.map((mid: string) => ({
     student_id: session.id,
-    module_id: mid,
-    term: term || '',
-    year: year || '',
-    status: 'registered',
+    module_id:  mid,
+    term:       term || '',
+    year:       year || '',
+    status:     'registered',
   }))
 
-  await supabaseAdmin.from('student_modules').upsert(rows, {
-    onConflict: 'student_id,module_id,term,year',
-    ignoreDuplicates: true,
-  })
+  const { error } = await supabaseAdmin
+    .from('student_modules')
+    .upsert(rows, { onConflict: 'student_id,module_id,term,year', ignoreDuplicates: true })
+
+  if (error) {
+    console.error('Module registration error:', error)
+    return NextResponse.json({ error: error.message }, { status: 500 })
+  }
 
   await supabaseAdmin.from('students').update({
-    reg_status: 'modules_registered',
+    reg_status:   'modules_registered',
     current_term: term || '',
     current_year: year || '',
   }).eq('id', session.id)
