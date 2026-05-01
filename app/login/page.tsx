@@ -1,13 +1,15 @@
 'use client'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
-import { User, Lock, BookOpen, BarChart2, CreditCard, FileText } from 'lucide-react'
+import { BookOpen, BarChart2, CreditCard, FileText } from 'lucide-react'
 
 export default function LoginPage() {
   const router = useRouter()
-  const [form, setForm] = useState({ username: '', password: '' })
+  // Use refs so inputs are uncontrolled — no re-render on every keystroke
+  const usernameRef = useRef<HTMLInputElement>(null)
+  const passwordRef = useRef<HTMLInputElement>(null)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -15,11 +17,13 @@ export default function LoginPage() {
     e.preventDefault()
     setError('')
     setLoading(true)
+    const username = usernameRef.current?.value.trim() || ''
+    const password = passwordRef.current?.value || ''
     try {
       const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ username, password }),
       })
       const data = await res.json()
       if (!res.ok) { setError(data.error); return }
@@ -33,30 +37,49 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex" style={{ background: '#0f172a' }}>
-      {/* Left panel */}
-      <div className="hidden lg:flex flex-1 flex-col justify-center items-center px-16 relative overflow-hidden"
+    <div className="min-h-screen flex flex-col lg:flex-row" style={{ background: '#0f172a' }}>
+
+      {/* ── Left / Top panel ── */}
+      <div className="lg:flex-1 flex flex-col justify-center items-center px-8 py-10 relative overflow-hidden"
         style={{ background: 'linear-gradient(135deg,#0f172a 0%,#1e3a5f 50%,#1a56db 100%)' }}>
-        <div className="absolute w-96 h-96 rounded-full top-[-80px] right-[-80px] opacity-20"
+
+        {/* Decorative blobs */}
+        <div className="absolute w-72 h-72 rounded-full top-[-60px] right-[-60px] opacity-20 pointer-events-none"
           style={{ background: 'radial-gradient(circle,#6366f1,transparent)' }} />
-        <div className="absolute w-80 h-80 rounded-full bottom-[-60px] left-[-60px] opacity-15"
+        <div className="absolute w-60 h-60 rounded-full bottom-[-40px] left-[-40px] opacity-15 pointer-events-none"
           style={{ background: 'radial-gradient(circle,#1a56db,transparent)' }} />
-        <div className="relative z-10 text-center max-w-sm">
-          <div className="w-24 h-24 rounded-full overflow-hidden mx-auto mb-7 shadow-2xl border-4 border-white/20">
-            <Image src="/cuu-logo.svg" alt="CUU Logo" width={96} height={96} className="w-full h-full object-cover" priority />
+
+        <div className="relative z-10 text-center w-full max-w-sm mx-auto">
+          {/* Logo — large, centred, visible on all screens */}
+          <div className="w-32 h-32 sm:w-36 sm:h-36 lg:w-40 lg:h-40 rounded-full overflow-hidden mx-auto mb-5
+                          shadow-2xl border-4 border-white/25 bg-white">
+            <Image
+              src="/cuu-logo.svg"
+              alt="Cavendish University Uganda"
+              width={160} height={160}
+              className="w-full h-full object-cover"
+              priority
+            />
           </div>
-          <h1 className="text-3xl font-extrabold text-white leading-tight mb-3">
-            CUU Student<br />Management Portal
+
+          {/* University name below logo */}
+          <p className="text-white/80 text-xs font-semibold tracking-widest uppercase mb-1">
+            Cavendish University Uganda
+          </p>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-white leading-tight mb-2">
+            Student Portal
           </h1>
-          <p className="text-white/60 text-sm leading-relaxed mb-10">
+          <p className="text-white/55 text-sm leading-relaxed mb-8 hidden sm:block">
             Your complete academic management system — courses, results, payments and more.
           </p>
-          <div className="space-y-3 text-left">
+
+          {/* Feature list — hidden on very small screens */}
+          <div className="space-y-2.5 text-left hidden sm:block">
             {[
-              { icon: BookOpen,  text: 'Course Registration & Enrollment' },
-              { icon: BarChart2, text: 'Academic Results & Transcripts' },
-              { icon: CreditCard,text: 'Fee Payment Tracking' },
-              { icon: FileText,  text: 'Comprehensive Report Generation' },
+              { icon: BookOpen,   text: 'Course Registration & Enrollment' },
+              { icon: BarChart2,  text: 'Academic Results & Transcripts' },
+              { icon: CreditCard, text: 'Fee Payment Tracking' },
+              { icon: FileText,   text: 'Comprehensive Report Generation' },
             ].map(({ icon: Icon, text }) => (
               <div key={text} className="flex items-center gap-3 text-white/75 text-sm">
                 <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center flex-shrink-0">
@@ -69,47 +92,65 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* Right panel */}
-      <div className="w-full lg:w-[460px] bg-white flex flex-col justify-center px-10 py-12 overflow-y-auto">
-        <div className="lg:hidden flex items-center gap-3 mb-8">
-          <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-gray-200">
-            <Image src="/cuu-logo.svg" alt="CUU Logo" width={40} height={40} className="w-full h-full object-cover" />
-          </div>
-          <span className="font-bold text-gray-900">CUU Portal</span>
-        </div>
+      {/* ── Right / Bottom panel ── */}
+      <div className="w-full lg:w-[460px] bg-white flex flex-col justify-center
+                      px-6 sm:px-10 py-10 overflow-y-auto">
 
         <h2 className="text-2xl font-extrabold text-gray-900 mb-1">Welcome back</h2>
-        <p className="text-sm text-gray-400 mb-8">Sign in to your student account to continue</p>
+        <p className="text-sm text-gray-400 mb-7">Sign in to your student account to continue</p>
 
         {error && (
-          <div className="flex items-center gap-2 bg-red-50 text-red-700 border border-red-200 rounded-xl px-4 py-3 text-sm font-medium mb-5">
-            <span>⚠️</span> {error}
+          <div className="flex items-center gap-2 bg-red-50 text-red-700 border border-red-200
+                          rounded-xl px-4 py-3 text-sm font-medium mb-5">
+            ⚠️ {error}
           </div>
         )}
 
+        {/* ── FORM — uncontrolled inputs fix keyboard disappearing ── */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-gray-600 mb-1.5">Username</label>
-            <div className="relative">
-              <User size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
-              <input type="text" required placeholder="Enter your username"
-                className="w-full pl-9 pr-4 py-2.5 border-2 border-gray-200 rounded-xl text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 transition-all"
-                value={form.username} onChange={e => setForm(f => ({ ...f, username: e.target.value }))} />
-            </div>
+            <label htmlFor="login-username" className="block text-xs font-semibold text-gray-600 mb-1.5">
+              Username
+            </label>
+            <input
+              id="login-username"
+              ref={usernameRef}
+              type="text"
+              autoComplete="username"
+              required
+              placeholder="Enter your username"
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl text-sm
+                         focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100
+                         transition-all bg-white"
+            />
           </div>
+
           <div>
-            <label className="block text-xs font-semibold text-gray-600 mb-1.5">Password</label>
-            <div className="relative">
-              <Lock size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
-              <input type="password" required placeholder="Enter your password"
-                className="w-full pl-9 pr-4 py-2.5 border-2 border-gray-200 rounded-xl text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 transition-all"
-                value={form.password} onChange={e => setForm(f => ({ ...f, password: e.target.value }))} />
-            </div>
+            <label htmlFor="login-password" className="block text-xs font-semibold text-gray-600 mb-1.5">
+              Password
+            </label>
+            <input
+              id="login-password"
+              ref={passwordRef}
+              type="password"
+              autoComplete="current-password"
+              required
+              placeholder="Enter your password"
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl text-sm
+                         focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100
+                         transition-all bg-white"
+            />
           </div>
-          <button type="submit" disabled={loading}
-            className="w-full py-3 rounded-xl text-white font-bold text-sm mt-2 disabled:opacity-60 shadow-lg hover:-translate-y-0.5 transition-all"
-            style={{ background: 'linear-gradient(135deg,#1a56db,#6366f1)', boxShadow: '0 4px 14px rgba(26,86,219,0.35)' }}>
-            {loading ? 'Signing in…' : '🔐  Sign In'}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full py-3.5 rounded-xl text-white font-bold text-sm mt-1
+                       disabled:opacity-60 active:scale-95 transition-all shadow-lg"
+            style={{ background: 'linear-gradient(135deg,#1a56db,#6366f1)',
+                     boxShadow: '0 4px 14px rgba(26,86,219,0.35)' }}
+          >
+            {loading ? 'Signing in…' : 'Sign In'}
           </button>
         </form>
 

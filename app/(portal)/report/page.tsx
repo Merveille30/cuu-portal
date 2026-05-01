@@ -37,8 +37,8 @@ export default function ReportPage() {
   return (
     <>
       <TopBar title="Reports" subtitle="Academic and financial reports" regNo={myProfile?.reg_no} />
-      <main className="pt-16 p-7">
-        <div className="mb-6 flex items-center justify-between">
+      <main className="pt-28 lg:pt-16 px-4 lg:px-7 pb-8">
+        <div className="mb-5 mt-2 flex items-center justify-between flex-wrap gap-3">
           <div>
             <h2 className="text-xl font-extrabold text-gray-900">Student Reports</h2>
             <p className="text-sm text-gray-400 mt-0.5">Comprehensive academic and financial overview</p>

@@ -10,9 +10,11 @@ export default async function PortalLayout({ children }: { children: React.React
   if (!student) redirect('/login')
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50">
       <Sidebar studentName={student.name} regNo={student.reg_no} />
-      <div className="flex-1 ml-64">
+      {/* On mobile: offset for top bar (56px) + topbar header (56px) = 112px
+          On desktop: offset for sidebar (256px) + header (64px) */}
+      <div className="lg:ml-64">
         {children}
       </div>
     </div>
