@@ -107,13 +107,6 @@ export default function AdminLoginPage() {
             </button>
           </form>
 
-          <div className="mt-6 p-4 bg-gray-50 rounded-xl border border-gray-200">
-            <p className="text-xs text-gray-500 font-semibold mb-1">Default credentials:</p>
-            <p className="text-xs text-gray-600">Username: <span className="font-mono font-bold">admin</span></p>
-            <p className="text-xs text-gray-600">Password: <span className="font-mono font-bold">admin123</span></p>
-            <p className="text-xs text-gray-400 mt-2">⚠️ Run migration_v2.sql in Supabase first</p>
-          </div>
-
           <p className="text-center text-xs text-gray-400 mt-4">
             Student portal? <a href="/login" className="text-blue-600 font-semibold hover:underline">Login here</a>
           </p>
