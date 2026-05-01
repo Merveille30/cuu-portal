@@ -27,7 +27,15 @@ export default function LoginPage() {
       })
       const data = await res.json()
       if (!res.ok) { setError(data.error); return }
-      router.push('/dashboard')
+      // Redirect based on registration status
+      const status = data.regStatus
+      if (!status || status === 'pending') router.push('/register/programme')
+      else if (status === 'course_selected') router.push('/register/modules')
+      else if (status === 'modules_registered') router.push('/register/documents')
+      else if (status === 'documents_uploaded') router.push('/register/documents')
+      else if (status === 'documents_approved') router.push('/register/invoice')
+      else if (status === 'invoiced') router.push('/finance/pay')
+      else router.push('/dashboard')
       router.refresh()
     } catch {
       setError('Something went wrong. Please try again.')

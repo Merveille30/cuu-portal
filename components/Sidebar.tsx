@@ -4,17 +4,19 @@ import { usePathname, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import {
   LayoutDashboard, BookOpen, CreditCard, BarChart2,
-  FileText, User, LogOut, Menu, X
+  FileText, User, LogOut, Menu, X, Bell, DollarSign
 } from 'lucide-react'
 import { useState } from 'react'
 
 const navItems = [
-  { label: 'Dashboard',    href: '/dashboard',  icon: LayoutDashboard, section: 'Main' },
-  { label: 'My Profile',   href: '/profile',    icon: User,            section: 'Main' },
-  { label: 'Courses',      href: '/courses',    icon: BookOpen,        section: 'Academics' },
-  { label: 'Results',      href: '/results',    icon: BarChart2,       section: 'Academics' },
-  { label: 'Fee Payments', href: '/payments',   icon: CreditCard,      section: 'Finance' },
-  { label: 'Reports',      href: '/report',     icon: FileText,        section: 'Reports' },
+  { label: 'Dashboard',      href: '/dashboard',     icon: LayoutDashboard, section: 'Main' },
+  { label: 'My Profile',     href: '/profile',       icon: User,            section: 'Main' },
+  { label: 'Notifications',  href: '/notifications', icon: Bell,            section: 'Main' },
+  { label: 'My Modules',     href: '/my-modules',    icon: BookOpen,        section: 'Academics' },
+  { label: 'Results',        href: '/results',       icon: BarChart2,       section: 'Academics' },
+  { label: 'Finance',        href: '/finance',       icon: CreditCard,      section: 'Finance' },
+  { label: 'Make Payment',   href: '/finance/pay',   icon: DollarSign,      section: 'Finance' },
+  { label: 'Reports',        href: '/report',        icon: FileText,        section: 'Reports' },
 ]
 
 interface SidebarProps {
