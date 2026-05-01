@@ -6,13 +6,13 @@ export async function GET() {
   const session = await getAdminSession()
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
+  // Fetch notifications for this specific admin OR any admin-role broadcast
   const { data } = await supabaseAdmin
     .from('notifications')
     .select('*')
-    .eq('user_id', session.id)
     .eq('user_role', 'admin')
     .order('created_at', { ascending: false })
-    .limit(50)
+    .limit(100)
 
   return NextResponse.json(data || [])
 }
@@ -21,12 +21,19 @@ export async function PATCH(req: NextRequest) {
   const session = await getAdminSession()
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const { markAllRead } = await req.json()
+  const { markAllRead, id } = await req.json()
+
   if (markAllRead) {
-    await supabaseAdmin.from('notifications')
+    await supabaseAdmin
+      .from('notifications')
       .update({ is_read: true })
-      .eq('user_id', session.id)
       .eq('user_role', 'admin')
+  } else if (id) {
+    await supabaseAdmin
+      .from('notifications')
+      .update({ is_read: true })
+      .eq('id', id)
   }
+
   return NextResponse.json({ success: true })
 }

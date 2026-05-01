@@ -2,15 +2,16 @@
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import Image from 'next/image'
-import { LayoutDashboard, Users, FileText, Bell, BarChart2, Settings, LogOut, Menu, X, DollarSign } from 'lucide-react'
+import { LayoutDashboard, Users, FileText, Bell, BarChart2, LogOut, Menu, X, DollarSign, ClipboardList } from 'lucide-react'
 import { useState } from 'react'
 
 const navItems = [
   { label: 'Dashboard',    href: '/admin/dashboard',  icon: LayoutDashboard },
   { label: 'Students',     href: '/admin/students',   icon: Users },
   { label: 'Documents',    href: '/admin/documents',  icon: FileText },
-  { label: 'Finance',      href: '/admin/finance',    icon: DollarSign },
   { label: 'Results',      href: '/admin/results',    icon: BarChart2 },
+  { label: 'Reports',      href: '/admin/reports',    icon: ClipboardList },
+  { label: 'Finance',      href: '/admin/finance',    icon: DollarSign },
   { label: 'Notifications',href: '/admin/notifications', icon: Bell },
 ]
 

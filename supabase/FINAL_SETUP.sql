@@ -8,7 +8,8 @@
 
 -- ── Drop old tables cleanly ────────────────────────────────
 DROP TABLE IF EXISTS student_modules CASCADE;
-DROP TABLE IF EXISTS documents       CASCADE;
+DROP TABLE IF EXISTS student_reports  CASCADE;
+DROP TABLE IF EXISTS documents        CASCADE;
 DROP TABLE IF EXISTS invoices        CASCADE;
 DROP TABLE IF EXISTS payments        CASCADE;
 DROP TABLE IF EXISTS results         CASCADE;
@@ -154,6 +155,23 @@ CREATE TABLE notifications (
   link       TEXT NOT NULL DEFAULT '',
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+-- ── STUDENT REPORTS / LEDGERS ────────────────────────────
+CREATE TABLE student_reports (
+  id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  student_id   UUID NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+  type         TEXT NOT NULL DEFAULT 'report',
+  title        TEXT NOT NULL,
+  content      TEXT NOT NULL DEFAULT '',
+  status       TEXT NOT NULL DEFAULT 'pending',
+  requested_by TEXT NOT NULL DEFAULT 'student',
+  shared_by    TEXT NOT NULL DEFAULT '',
+  shared_at    TIMESTAMPTZ,
+  created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_student_reports_student ON student_reports(student_id);
+ALTER TABLE student_reports DISABLE ROW LEVEL SECURITY;
 
 -- ── ADMINS ────────────────────────────────────────────────
 CREATE TABLE admins (
